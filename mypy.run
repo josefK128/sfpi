@@ -1,0 +1,9 @@
+run mypy from src which contains the mypy.ini config file:
+(running from sfpi fails to find all files even with mypy.ini there ?!!
+This is a bug in mypy since it is supposed to search directories recursively so
+@sfpi> mypy src  should work but DOES NOT even with mypy.ini in @sfpi!
+
+
+instead use:
+
+src> mypy **/*.py

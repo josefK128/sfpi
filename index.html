@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>sf client</title>
+</head>
+<body>
+    <div id="content">starting socketIO client...</div>
+    <script src="./node_modules/socket.io-client/dist/socket.io.js"></script>
+      
+    <script>
+      var channel = "sf",
+          socket,
+          index = 0;
+
+      console.log(`running script index = ${index++}`);
+
+
+      // connect to index.js server = config.server_host 
+      // on port config.channels_port (default is 8081)
+      // set up channels with names specified in config.channels
+      function connect(){
+        var host = "tosca",
+            port = 8081;
+        socket = io("http://" + host + ":" + port, {transports: ['websocket']});
+        console.log(`\connection to ${host} at ${port}`);
+        console.log(`socket = ${socket}`);
+      }
+    
+      connect();
+      console.log(`beginning data send`);
+      setInterval(() => {
+        socket.emit(channel, [1.0,2,5,3.6])
+      },5000);
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,38 @@
+import numpy as np
+
+        if nchannels == 2:
+            print('\nNOTE:') 
+            print('sf.read(2-channel soundfile  returns tuple a:')
+            print('a[0] = np.ndarray with shape = (nsamples, nchannels)')
+            print('exp: sf.read(sitarC4.wav, dtype=np.int16) returns:')
+            print('a[0] = ndarray a[0].shape = (106915,2) - 2 => 2 columns')
+            print('a[1] = int - nchannels')
+
+            print('\ncontinuing:') 
+            al = a[0][:,0]  #left
+            ar = a[0][:,1]  #right
+            print('type(al=a[0][:,0]) = ' + str(type(al)))
+            print('type(ar=a[0][:,1]) = ' + str(type(ar)))
+            print('\nal == ar is ' + str(np.array_equal(al,ar))) 
+
+            # left
+            scalarl = normscalar(al)
+            nal = scale(al, scalarl)
+            print('\nnorm-scalar value of lch array scalarl = ' + str(scalarl))
+            print('\nnormalized lch ndarray nal = ' + str(nal))
+            print('max abs-value in nal = ' + str(np.amax(abs(na1)))
+
+            # right
+            scalarr = normscalar(ar)
+            nar = scale(ar, scalarr)
+            print('\nnorm-scalar value of rch array scalarr = ' + str(scalarr))
+            print('\nnormalized rch ndarray nar = ' + str(nar))
+            print('max abs-value in nar = ' + str(np.amax(abs(nar)))
+
+            # create stere0 sf and write to file sfpath_
+            as = np.array([][])
+            for i in range(min(nal.size, nar.size)):
+                as = np.append(as, [nal[i], nar[i]])
+
+            sf.write(sfpath_, as)
+
