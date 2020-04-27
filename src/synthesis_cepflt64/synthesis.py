@@ -93,23 +93,22 @@ def action(ceppath_:str, sfpath_:str, sr:int=44100) ->None:
 
     # get size of ceppath
     cepsize_ = os.path.getsize(ceppath_)
-    cepblocksize_ = cepsize_//4096     # 1024-blocks: float32 => //4096 (bytes)
+    cepblocksize_ = cepsize_//8192     # 1024-blocks: float32 => //4096 (bytes)
     if diagnostics:
         print("\nsynthesis: ceppath_ size in bytes = " + str(cepsize_))
-        print("synthesis: ceppath_ size in float32 = " + str(cepsize_//4))
-        print("synthesis: ceppath_ size in 1024-float32-blocks = " + str(cepblocksize_))
+        print("synthesis: ceppath_ size in float64s = " + str(cepsize_//8))
+        print("synthesis: ceppath_ size in 1024-float64-blocks = " + str(cepblocksize_))
 
 
 
-    # read float32 cepstral coefs from ceppath_ to float64-array cepa_
-    cepa_:np.ndarray = np.fromfile(ceppath_, dtype=np.float32)
+    # read cepstral coefs from ceppath_ to float64-array cepa_
+    cepa_:np.ndarray = np.fromfile(ceppath_, dtype=np.float64)
     if diagnostics:
         print('\nread cepstral coefs from ' + ceppath_ + ' into array cepa_ = ' + str(cepa_))
-        print('type(cepa_[0]) is ' + str(type(cepa_[0])))
 
 
     # accumulate synthesized 512-overlapped soundblocks hb_ in sfa_ 
-    sfa_ = np.ndarray([], dtype=np.float32)
+    sfa_ = np.ndarray([], dtype=np.float64)
 
 
     # transform cepstral 1024-blocks into 1024-sound-blocks by inverse-cepstrum
@@ -121,7 +120,7 @@ def action(ceppath_:str, sfpath_:str, sr:int=44100) ->None:
     while i < cepblocksize_:
         # read ndelay from block position 512 - then set the position to 0.0
         ndelay = int(cepa_[pointer + 512])
-        cepa_[pointer + 512] = np.float32(0.0)
+        cepa_[pointer + 512] = np.float64(0.0)
 
         # read synthesized sound-blk block 
         block:np.ndarray = inverse_complex_cepstrum(cepa_[pointer: pointer + 1024], ndelay)

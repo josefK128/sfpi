@@ -1,6 +1,5 @@
 # analysis.py
 
-import os
 import numpy as np
 from acoustics.cepstrum import complex_cepstrum, real_cepstrum
 import soundfile as sf
@@ -80,7 +79,7 @@ def action(sfpath:str, ceppath:str) -> int:
 
     # read block by block, window block, take complex cepstrum, wr to ceppath
     i:int = 0
-    cep:np.ndarray = np.array([], dtype=np.float32)
+    cep:np.ndarray = np.array([], dtype=np.float64)
     for blk in sf.blocks(sfpath, 1024, 512, dtype='int16', fill_value=0.0):
         block = blk.astype(np.float64)
 
@@ -111,17 +110,13 @@ def action(sfpath:str, ceppath:str) -> int:
         # complex cepstrum of windowed block - write block to ceppath
         #blockcep = real_cepstrum(block, 1024)
         blockcep, ndelay  = complex_cepstrum(block)
-        blockcep = blockcep.astype(np.float32)
 
         if diagnostics:
             if i%10 == 0:
-                print('analysis.action: type(blockcep[0]) = ' + str(type(blockcep[0])))
                 print('\nanalysis.action: cepstrum(block) blockcep = ' + str(blockcep))
                 absmx = np.amax(abs(blockcep))
                 mxidx = np.argmax(abs(blockcep))
                 print('analysis.action: blockcep absmx = ' + str(absmx) + ' at index ' + str(mxidx))
-
-
 
 
         # @TODO 
@@ -129,7 +124,7 @@ def action(sfpath:str, ceppath:str) -> int:
         # to use need to store tuple (ndelay, vuv) as (int16, int16 +-1)
         # encode vuv and ndelay into blockcep at position 512
         # FOR NOW - just encode ndelay in blockcep[512]
-        ndelay = np.float32(ndelay)
+        ndelay = np.float64(ndelay)
         blockcep[512] = ndelay
 #        if vuv > .5:       # voiced - periodic
 #            blockcep[512] = ndelay
@@ -138,7 +133,7 @@ def action(sfpath:str, ceppath:str) -> int:
 
         if diagnostics:
             if i%10 == 0:
-                print('analysis.action: after conv to float32 type(ndelay) = ' + str(type(ndelay)))
+                print('analysis.action: after conv to float64 type(ndelay) = ' + str(type(ndelay)))
                 print('analysis.action: ndelay = ' + str(ndelay))
                 print('analysis.action: blockcep[512]  = ' + str(blockcep[512]))
 
@@ -152,25 +147,21 @@ def action(sfpath:str, ceppath:str) -> int:
 
 
     # write ndarray cep to ceppath
-    cep = cep.astype(np.float32)
-    if diagnostics:
-        print('\n\n\n&&&&&& analysis.action: writing cep to ' + ceppath + ' type(cep[0]) = ' + str(type(cep[0])))
     cep.tofile(ceppath)
 
     # report
-    print('analysis.action: read ' + str(i) + ' overlapping sound-blocks from ' + sfpath)
+    print('\n\nanalysis.action: read ' + str(i) + ' overlapping sound-blocks from ' + sfpath)
     print('analysis.action: wrote ' + str(i) + ' cepstral-blocks to ' + ceppath)
     print('analysis.action: cepstral-blocks cep = ' + str(cep))
 
     # sanity check on cep 
     if diagnostics:
-        sanity_cep = np.fromfile(ceppath, dtype=np.float32)  
+        sanity_cep = np.fromfile(ceppath, dtype=np.float64)  
         print("\n\nanalysis.action: sanity check: reading cepstral coefs sanity_cep from " + ceppath)
         print('analysis.action: els of sanity_cep have type ' + str(type(sanity_cep[0])))
         print('analysis.action: sanity_cep.size should be ' + str(i*1024))
-    print("analysis.action: sanity_cep has size " + str(sanity_cep.size))
-    print("analysis.action: ceppath has size (bytes) = " + str(os.path.getsize(ceppath)))
-
+        print("analysis.action: sanity_cep has size " + str(sanity_cep.size))
+      
     print("\n\nANALYSIS complete\n\n")
 
     # return samplerate for use in synthesis sf.write

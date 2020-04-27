@@ -47,9 +47,6 @@ if __name__ == '__main__':
         scorepath += 'test/test.json'
         print('\n\n\n@@@ sfpi: E2E-TEST using score ' + scorepath)
         print('test soundfile is sf/test/test.wav == sf/base/sitarC4_mono.wav')
-        #TEMP !!!
-        #diagnostics = False  # True
-        diagnostics = True
     else:
         scorepath += sys.argv[1] + '.json'
         print('\n\n\n@@@ sfpi: ANALYSIS-SYNTHESIS using score ' + scorepath)
@@ -97,27 +94,29 @@ if __name__ == '__main__':
             print('\nsfpi: after synthesis.action - no return')
 
             # compare original sf and synthesized sf
-            if diagnostics:
-                print('\n\n\n\nsfpi: diff.arraydiff distance(' + sfpath + ', ' + sfpath_ + ')')
-                # read in isf at sfpath
-                print('\nsfpi: reading initial soundfile isf = ' + sfpath)
-                isf, sr = sf.read(sfpath, dtype='int16')
-                print('sfpi: isf = ' + str(isf))
-                #print('sfpi: isf[1014:1040] = ' + str(isf[1014:1040]))
-                print('sfpi: sr = ' + str(sr))
-    
-                # read in isf_ from sfpath_
-                print("\n\nsfpi: reading synthesized isf_ from " + sfpath_)
-                isf_, sr_ = sf.read(sfpath_, dtype='int16')
-                print('sfpi: isf_ = ' + str(isf_))
-                #print('sfpi: isf_[1014:1040] = ' + str(isf_[1014:1040]))
-                print('sfpi: sr_ = ' + str(sr_))
-    
-                # test - average error per sample
-                print('\n\nsfpi: comparing isf and isf_')
-                d, length = diff.arraydiff(isf, isf_)
-                print('\n\nsfpi: total distance d = ' + str(d))
-                print('sfpi: number of indices measured = ' + str(length))
-                print('sfpi: *** sample distance d/length = ' + str(d/length))
-        
+            print('\n\n\n\nsfpi: diff.arraydiff distance(' + sfpath + ', ' + sfpath_ + ')')
+            # read in isf at sfpath
+            print('\nsfpi: reading initial soundfile isf = ' + sfpath)
+            isf, sr = sf.read(sfpath, dtype='int16')
+            print('sfpi: isf = ' + str(isf))
+            #print('sfpi: isf[1014:1040] = ' + str(isf[1014:1040]))
+            print('sfpi: sr = ' + str(sr))
+
+            # read in isf_ from sfpath_
+            print("\n\nsfpi: reading synthesized isf_ from " + sfpath_)
+            isf_, sr_ = sf.read(sfpath_, dtype='int16')
+            print('sfpi: isf_ = ' + str(isf_))
+            #print('sfpi: isf_[1014:1040] = ' + str(isf_[1014:1040]))
+            print('sfpi: sr_ = ' + str(sr_))
+
+            # test - average error per sample
+            # NOTE diff.arraydiff expects two int16 soundfiles
+            print('\n\nsfpi: comparing isf and isf_')
+            d, length = diff.arraydiff(isf, isf_)
+            print('\n\nsfpi: total distance d = ' + str(d))
+            print('sfpi: number of indices measured = ' + str(length))
+            print('sfpi: *** sample distance d/length = ' + str(d/length))
+            print('sfpi: NOTE - some difference even in passthru variation occurs (exp e2e-test) due to global phase-error introduced in phase-unwrapping')
+            print('sfpi: However: there is no perceptible difference between the original file and the synthesized filw')
+
             print('\n\n@@@ SFPI PROCESSING complete')

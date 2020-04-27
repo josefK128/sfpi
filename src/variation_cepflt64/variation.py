@@ -21,7 +21,7 @@ def action(ceppath:str, ceppath_:str, composition:dict) -> None:
     if diagnostics:
         print('\n\nvariation: reading cep from ' + ceppath)
         print('variation: size of ' + ceppath + ' = ' + str(os.path.getsize(ceppath)))
-    cep = np.fromfile(ceppath, dtype=np.float32)
+    cep = np.fromfile(ceppath, dtype=np.float64)
     if diagnostics:
         print('variation: size of  cep = ' + str(cep.size))
         print('variation: cep = ' + str(cep))
@@ -81,7 +81,7 @@ if __name__ == "__main__":
     print('variation test: type(cepf) = type(cepf_) = ' + str(type(cepf)))
 
     # read ndarray cep from ceppath
-    cep =  np.fromfile(cepf, dtype='float32', count=1024)
+    cep =  np.fromfile(cepf, dtype='float64', count=1024)
 
 
     # variation.action
@@ -89,7 +89,7 @@ if __name__ == "__main__":
 
 
     # read ndarray cep from ceppath
-    cep_ = np.fromfile(cepf_, dtype='float32', count=1024)
+    cep_ = np.fromfile(cepf_, dtype='float64', count=1024)
 
     print('\n\n\nvariation test: cep = ' + str(cep))
     print('\nvariation test: cep_ = ' + str(cep_))

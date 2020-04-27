@@ -1,0 +1,15 @@
+{ "_analysis": true,
+  "_variation": true,
+  "_synthesis": true,
+
+  "sfbranch": "sf/test/test32.wav",
+  "cepbranch": "cep/test/test32.cep",
+  "cepbranch_": "cep_/test/test32_.cep",
+  "sfbranch_": "sf_/test/test32_.wav",
+
+  "sr": 44100,
+  "composition":{"passthru": true,
+                 "resceppath": null, 
+                 "drvceppath": null }
+}
+ 
