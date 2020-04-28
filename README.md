@@ -1,4 +1,11 @@
-__README.md__
+__README.md__  
+
+###### SFPI - Synthesis from Performance Information
+###### Python cepstrum analysis-synthesis system for audio/music synthesis and variational autoencoder for vocal style transfer
+
+
+
+###### setup
 
 * install python 3.X (current latest 3.8.X) - see 
   https://www.python.org/downloads/ - simply click download button and follow 

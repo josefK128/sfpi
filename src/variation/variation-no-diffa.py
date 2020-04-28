@@ -22,11 +22,16 @@ def action(ceppath:str, ceppath_:str, composition:dict) -> None:
         print('\n\nvariation: reading cep from ' + ceppath)
         print('variation: size of ' + ceppath + ' = ' + str(os.path.getsize(ceppath)))
     cep = np.fromfile(ceppath, dtype=np.float32)
+    cepfilesizebytes = os.path.getsize(ceppath)
+    cepfilesizefloats =  cepfilesizebytes//4
     if diagnostics:
         print('variation: size of  cep = ' + str(cep.size))
+        print('variation: cepfilesizebytes = ' + str(cepfilesizebytes))
+        print('variation: cepfilesizefloats = ' + str(cepfilesizefloats))
         print('variation: cep = ' + str(cep))
         print('variation: type(cep) = ' + str(type(cep)))
         print('variation: type(cep[0]) = ' + str(type(cep[0])))
+
 
 
     # compose cep_ - variation on cep
@@ -35,14 +40,41 @@ def action(ceppath:str, ceppath_:str, composition:dict) -> None:
         cep_ = cep
     else:
         print('\n\nvariation: composition.passthru = False')
-        print('variation: reading ' + ceppath + ' 512-block by 512-block:')
-        print('variation: composing ' + ceppath_ + ' 512-block by 512-block:')
+        print('variation: reading ' + ceppath + ' 1024-block by 1024-block:')
+        print('variation: composing ' + ceppath_ + ' 1024-block by 1024-block:')
+        
+    # read 1024-blocks one at a time
+    pointer = 0
+    i = 0
+    while i < cep.size:
+        if diagnostics:
+            if i%10 == 0:
+                print('\n\n@@@ variation:read block ' + str(i) + ' from cep-cfs cep')
+
+        # read vuv from block position 513 - then set the position to 0.0
+        vuv:np.float32 = cep[pointer + 513]
+        cep[pointer + 513] = np.float32(0.0)
+        if diagnostics:
+            if i%10 == 0:
+                print('variation: type(cep[pointer]) = ' + str(type(cep[pointer])))
+                print('variation: vuv = ' + str(vuv))
+
+        # increment i and pointer
+        i += 1
+        pointer += 1024
+        if pointer >= cepfilesizefloats:
+            print('\nbreak loop: pointer = ' + str(pointer) + ' cepfilesizefloats = ' + str(cepfilesizefloats))
+            break
+
 
 
     # write cep_ to ceppath_
     cep_.tofile(ceppath_)
+
+
+    # report
     if diagnostics:
-        print('variation: size of  cep_ = ' + str(cep_.size))
+        print('\nvariation: size of  cep_ = ' + str(cep_.size))
         print('variation: cep_ = ' + str(cep_))
         print('variation: type(cep_) = ' + str(type(cep_)))
         print('variation: type(cep_[0]) = ' + str(type(cep_[0])))
