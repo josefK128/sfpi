@@ -84,10 +84,9 @@ def action(sfpath:str, ceppath:str) -> int:
     for blk in sf.blocks(sfpath, 1024, 512, dtype='int16', fill_value=0.0):
         block = blk.astype(np.float64)
 
-        # @TODO
-        # voiced-unvoiced for block - NOT USED as of APRIL 25 2020
-        # to use need to store tuple (ndelay, vuv) as (int16, int16 +-1)
-        vuv:np.int16 = np.int16(voiced_unvoiced(block))
+        # voiced-unvoiced for block 
+        vuv:np.float32 = voiced_unvoiced(block)
+
 
         if diagnostics:
             if i%10 == 0:
@@ -97,6 +96,7 @@ def action(sfpath:str, ceppath:str) -> int:
                 print('analysis.action: type(block[0]) is ' + str(type(block[0])))
                 print('analysis.action: voiced_unvoiced(block) vuv = ' + str(vuv))
                 print('analysis.action: type(vuv) = ' + str(type(vuv)))
+
 
         # window
         block = np.multiply(block, window)
@@ -122,22 +122,18 @@ def action(sfpath:str, ceppath:str) -> int:
                 print('analysis.action: blockcep absmx = ' + str(absmx) + ' at index ' + str(mxidx))
 
 
-
-
-        # @TODO 
-        # voiced-unvoiced for block - NOT USED as of APRIL 25 2020
-        # to use need to store tuple (ndelay, vuv) as (int16, int16 +-1)
-        # encode vuv and ndelay into blockcep at position 512
-        # FOR NOW - just encode ndelay in blockcep[512]
+        # encode ndelay for block as np.float32(ndelay) in blockcep[512] 
+        # encode vuv for block as np.float32(ndelay) in blockcep[513] 
         ndelay = np.float32(ndelay)
         blockcep[512] = ndelay
-#        if vuv > .5:       # voiced - periodic
-#            blockcep[512] = ndelay
-#        else:              # unvoiced - noise
-#            blockcep[512] = -ndelay
+        vuv = np.float32(vuv)
+        blockcep[513] = vuv
+
 
         if diagnostics:
             if i%10 == 0:
+                print('analysis.action: vuv = ' + str(vuv) + ': write to blockcep[513]')
+                print('analysis.action: blockcep[513]  = ' + str(blockcep[513]))
                 print('analysis.action: after conv to float32 type(ndelay) = ' + str(type(ndelay)))
                 print('analysis.action: ndelay = ' + str(ndelay))
                 print('analysis.action: blockcep[512]  = ' + str(blockcep[512]))
@@ -147,7 +143,7 @@ def action(sfpath:str, ceppath:str) -> int:
         cep = np.append(cep, blockcep)
 
         # increment block index
-        i+=1
+        i += 1
 
 
 
@@ -156,6 +152,7 @@ def action(sfpath:str, ceppath:str) -> int:
     if diagnostics:
         print('\n\n\n&&&&&& analysis.action: writing cep to ' + ceppath + ' type(cep[0]) = ' + str(type(cep[0])))
     cep.tofile(ceppath)
+
 
     # report
     print('analysis.action: read ' + str(i) + ' overlapping sound-blocks from ' + sfpath)

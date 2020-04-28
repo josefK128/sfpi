@@ -38,12 +38,16 @@ __README.md__
 
   ​           This type-check should respond with: 'success: no issues found in 10 source files'
 
+  
+
 * to run an end-to-end test of the application itself -  src> py sfpi test/test - this orchestrates the application execution according the the 'score'  ../scores/test/test.json
   
 * In this e2e-test an end-to-end test: **analysis.py** reads soundfile  ../*sf/test/test.wav* and writes a cepstral coefficients file  ../*cep/test/test.cep*;  **variation.py**  reads *../cep/test/test.cep* and writes the identical file to ../*cep\_/test/test\_.cep* (normaly variation.py will vary the cepstral file to create a new synthesized output soundfile but in the case it simply does a passthru); finally **synthesis.py**  reads *../cep\_/test/test\_.cep* and creates the output soundfile ../*sf\__/test/test\__.wav*.
   
+  
+  
 * Other runs of the application are controlled by a composed score-file, say 
 
-  scores/<branch>/<name>.json  
+  scores/branch-directory-name/score-name.json  
 
-  To launch the application with this score run src> py sfpi <branch>/<name>  (no prior path or .json extension is needed)
+  To launch the application with this score run src> py sfpi  branch-directory-name/score-name   (no prior path or .json extension is needed)

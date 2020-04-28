@@ -109,9 +109,11 @@ def action(ceppath_:str, sfpath_:str, sr:int=44100) ->None:
 
 
     # accumulate synthesized 512-overlapped soundblocks hb_ in sfa_ 
-    sfa_ = np.ndarray([], dtype=np.float32)
+    sfa_ = np.ndarray([], dtype=np.float64)
 
 
+
+    # *********************
     # transform cepstral 1024-blocks into 1024-sound-blocks by inverse-cepstrum
     # RECALL: cepblocksize_ is no. of 1024-blocks (float64 or float32)
     init = True   # for initialization of generate_halfblock
@@ -125,20 +127,28 @@ def action(ceppath_:str, sfpath_:str, sr:int=44100) ->None:
 
         # read synthesized sound-blk block 
         block:np.ndarray = inverse_complex_cepstrum(cepa_[pointer: pointer + 1024], ndelay)
+        if diagnostics:
+            if i%10 == 0:
+                print('\n\n@@@ synthesis: read in block ' + str(i))
+                print('synthesis: ndelay = ' + str(ndelay))
+                print('synthesis: type(ndelay) = ' + str(type(ndelay)))
+                print('synthesis: type(cepa_[0]) = ' + str(type(cepa_[0])))
+                print('after icep: type(block[0]) is ' + str(type(block[0])))
 
         # generate overlap-added half-block hb_ from synthesized block 
         hb_ = generate_halfblock(block, _hbsize=512)
         if diagnostics:
             if i%10 == 0:
-                print('\nsynthesis: @@@ read in block ' + str(i))
-                print('synthesis: ndelay = ' + str(ndelay))
-                print('synthesis: type(ndelay) = ' + str(type(ndelay)))
                 absmx = np.amax(hb_)
                 mxidx = np.argmax(hb_)
+                print('after gen_bb: type(hb_[0]) is ' + str(type(hb_[0])))
                 print('synthesis: overlap-added half-soundblock has absmx = ' + str(absmx) + ' at index ' + str(mxidx))
 
         # add overlap-added half-block hb_ to synthesized sound-array sfa_
         sfa_ = np.append(sfa_, hb_)
+        if diagnostics:
+            if i%10 == 0:
+                print('after append of hb_: type(sfa_[0]) is ' + str(type(sfa_[0])))
 
         # advance pointer and increment index i
         pointer += 1024
@@ -206,6 +216,7 @@ if __name__ == "__main__":
 
     # cepstrum -> soundfile_ test
     diagnostics = True
+    init = True
     print('synthesizing soundfile ' + sfpath_ + ' from cepstrum' + ceppath_)
 
     action(ceppath_, sfpath_)

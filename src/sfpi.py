@@ -4,7 +4,6 @@ import sys
 import json
 import numpy as np
 from scipy import signal  
-import matplotlib.pyplot as plot
 import soundfile as sf
 sys.path.append('C:/public/music-synth/@sfpi/src/analysis')
 sys.path.append('C:/public/music-synth/@sfpi/src/variation')
@@ -116,7 +115,9 @@ if __name__ == '__main__':
             print('\n\nsfpi: total distance d = ' + str(d))
             print('sfpi: number of indices measured = ' + str(length))
             print('sfpi: *** sample distance d/length = ' + str(d/length))
-            print('sfpi: NOTE - some difference even in passthru variation occurs (exp e2e-test) due to global phase-error introduced in phase-unwrapping')
-            print('sfpi: However: there is no perceptible difference between the original file and the synthesized filw')
+            print('\nsfpi: NOTE: diff>0 even in variation passthru (exp:e2e-test) due to:')
+            print('[1] cep_[512]=cep_[513]=0.0 after storing ndelay and vuv respectively')
+            print('[2] possible global phase-error introduced in phase-unwrapping')
+            print('However: there is no perceptible difference between the original file and the synthesized file')
 
             print('\n\n@@@ SFPI PROCESSING complete')
