@@ -13,7 +13,7 @@ diagnostics:bool = False
 def arraydiff(a1:np.ndarray, a2:np.ndarray) -> Tuple[np.float64, int]:
     print('\n\nARRAYDIFF')
     print('\ndiff: a1.size = ' + str(a1.size) + ' a2.size = ' + str(a2.size))
-    print('NOTE: difference in initial a.wav and synthesized a_.wav is probably because a1 needed zero-padding to make its length divisible by the block size')
+
 
     a1f = a1.astype(np.float64)
     a2f = a2.astype(np.float64)

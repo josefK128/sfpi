@@ -121,9 +121,9 @@ def action(ceppath_:str, sfpath_:str, sr:int=44100) ->None:
     i = 0
 
     while i < cepblocksize_:
-        # read ndelay from block position 512 - then set the position to 0.0
-        ndelay = int(cepa_[pointer + 512])
-        cepa_[pointer + 512] = np.float32(0.0)
+        # read ndelay from block position 511 - then set the position to 0.0
+        ndelay = int(cepa_[pointer + 511])
+        cepa_[pointer + 511] = np.float32(0.0)
 
         # read synthesized sound-blk block 
         block:np.ndarray = inverse_complex_cepstrum(cepa_[pointer: pointer + 1024], ndelay)
@@ -132,6 +132,7 @@ def action(ceppath_:str, sfpath_:str, sr:int=44100) ->None:
                 print('\n\n@@@ synthesis: read in block ' + str(i))
                 print('synthesis: ndelay = ' + str(ndelay))
                 print('synthesis: type(ndelay) = ' + str(type(ndelay)))
+                print('synthesis: cepa_[pointer+511] = ' + str(cepa_[pointer+511]))
                 print('synthesis: type(cepa_[0]) = ' + str(type(cepa_[0])))
                 print('after icep: type(block[0]) is ' + str(type(block[0])))
 

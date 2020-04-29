@@ -4,6 +4,8 @@ import os
 import json
 import numpy as np
 import soundfile as sf
+#sys.path.append('C:/public/music-synth/@sfpi/src/util/')
+#import diff
 
 
 diagnostics = True
@@ -32,6 +34,22 @@ def action(ceppath:str, ceppath_:str, composition:dict) -> None:
         print('variation: type(cep) = ' + str(type(cep)))
         print('variation: type(cep[0]) = ' + str(type(cep[0])))
 
+        # check evenness of cepstrum - why does this FAIL?
+#        print('\n')
+#        d_even:np.float32 = np.float(0.0)
+#        energy:np.float32 = np.float(0.0)
+#        for i in range(512):
+#            if i < 20:
+#                #j = 1023 - i
+#                j = 511 - i
+#                k = 512 + i
+#                #print('cep[' + str(i) + '] = ' + str(cep[i]))
+#                print('cep[' + str(k) + '] = ' + str(cep[k]))
+#                print('cep[' + str(j) + '] = ' + str(cep[j]))
+#            d_even += np.absolute(cep[i] - cep[1023-i])
+#            energy += np.absolute(cep[i])
+#        print('\n%%% ave-distance L-cep from R-cep d_even = ' + str(d_even/512))
+#        print('%%% ave-energy per cep coef = ' + str(energy/512))
 
 
     # compose cep_ - variation on cep
@@ -51,13 +69,14 @@ def action(ceppath:str, ceppath_:str, composition:dict) -> None:
             if i%10 == 0:
                 print('\n\n@@@ variation:read block ' + str(i) + ' from cep-cfs cep')
 
-        # read vuv from block position 513 - then set the position to 0.0
-        vuv:np.float32 = cep[pointer + 513]
-        cep[pointer + 513] = np.float32(0.0)
+        # read vuv from block position 512 - then set the position to 0.0
+        vuv:np.float32 = cep[pointer + 512]
+        cep[pointer + 512] = np.float32(0.0)
         if diagnostics:
             if i%10 == 0:
                 print('variation: type(cep[pointer]) = ' + str(type(cep[pointer])))
                 print('variation: vuv = ' + str(vuv))
+                print('variation: cep[pointer+512] = ' + str(cep[pointer+512]))
 
         # increment i and pointer
         i += 1
@@ -105,12 +124,9 @@ if __name__ == "__main__":
     print('variation test: ceppath_ = ' + str(ceppath_))
     print('\nvariation test: composition = ' + str(composition))
 
-    # open cepstral files
+    # open ceppath file
     cepf = open(ceppath, 'rb')
-    cepf_ = open(ceppath_, 'rb')
     print('\nvariation test: opening ' + ceppath + ' for test reading')
-    print('variation test: opening ' + ceppath_ + ' for test reading')
-    print('variation test: type(cepf) = type(cepf_) = ' + str(type(cepf)))
 
     # read ndarray cep from ceppath
     cep =  np.fromfile(cepf, dtype='float32', count=1024)
@@ -121,6 +137,10 @@ if __name__ == "__main__":
 
 
     # read ndarray cep from ceppath
+    cepf_ = open(ceppath_, 'rb')
+    print('variation test: opening ' + ceppath_ + ' for test reading')
+
+    # read ndarray cep_ from ceppath_
     cep_ = np.fromfile(cepf_, dtype='float32', count=1024)
 
     print('\n\n\nvariation test: cep = ' + str(cep))

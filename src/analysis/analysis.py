@@ -122,20 +122,20 @@ def action(sfpath:str, ceppath:str) -> int:
                 print('analysis.action: blockcep absmx = ' + str(absmx) + ' at index ' + str(mxidx))
 
 
-        # encode ndelay for block as np.float32(ndelay) in blockcep[512] 
-        # encode vuv for block as np.float32(ndelay) in blockcep[513] 
+        # encode ndelay for block as np.float32(ndelay) in blockcep[511] 
+        # encode vuv for block as np.float32(ndelay) in blockcep[512] 
         ndelay = np.float32(ndelay)
-        blockcep[512] = ndelay
+        blockcep[511] = ndelay
         vuv = np.float32(vuv)
-        blockcep[513] = vuv
+        blockcep[512] = vuv
 
 
         if diagnostics:
             if i%10 == 0:
-                print('analysis.action: vuv = ' + str(vuv) + ': write to blockcep[513]')
-                print('analysis.action: blockcep[513]  = ' + str(blockcep[513]))
                 print('analysis.action: after conv to float32 type(ndelay) = ' + str(type(ndelay)))
-                print('analysis.action: ndelay = ' + str(ndelay))
+                print('analysis.action: ndelay = ' + str(ndelay) + ' write to blockcep[511]')
+                print('analysis.action: blockcep[511]  = ' + str(blockcep[511]))
+                print('analysis.action: vuv = ' + str(vuv) + ': write to blockcep[512]')
                 print('analysis.action: blockcep[512]  = ' + str(blockcep[512]))
 
 
