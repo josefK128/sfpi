@@ -72,16 +72,13 @@ if __name__ == '__main__':
         print('sfpi: sfpath_ = ' + str(sfpath_))
         print('sfpi: ceppath_ = ' + str(ceppath_))
 
-        sr = score['sr']
         composition = score['composition']
-        print('sfpi: sr = ' + str(sr))
         print('sfpi: composition = ' + str(composition))
         
 
         # process score
         if _analysis:
             sr = analysis.action(sfpath, ceppath)
-            score['sr'] = sr
             print('\nsfpi: after analysis.action return is sr = ' + str(sr))
     
         if _variation:

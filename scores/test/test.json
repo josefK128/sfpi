@@ -7,9 +7,8 @@
   "cepbranch_": "cep_/test/test_.cep",
   "sfbranch_": "sf_/test/test_.wav",
 
-  "sr": 44100,
-  "composition":{"passthru": true,
-                 "resceppath": null, 
-                 "drvceppath": null }
+  "composition":{"cross_synthesis": false,
+                 "driverceppath": null, 
+                 "threshold": 128 }
 }
  

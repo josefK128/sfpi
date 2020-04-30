@@ -122,7 +122,7 @@ def action(ceppath_:str, sfpath_:str, sr:int=44100) ->None:
 
     while i < cepblocksize_:
         # read ndelay from block position 511 - then set the position to 0.0
-        ndelay = int(cepa_[pointer + 511])
+        ndelay = round(cepa_[pointer + 511])
         cepa_[pointer + 511] = np.float32(0.0)
 
         # read synthesized sound-blk block 
