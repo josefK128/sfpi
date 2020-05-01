@@ -39,6 +39,8 @@ sfpath_:str = basehref
 
 # sfpi.py ENTRY POINT
 if __name__ == '__main__':
+    #default sr if analysis not run
+    sr:int = 44100  
 
     # no cmdline arg => use 'scores/test/test.json' as unit-test
     # else use cmdline arg as score for production run - diagnostics F

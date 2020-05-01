@@ -74,9 +74,13 @@ def action(ceppath:str, ceppath_:str, composition:dict) -> None:
             if i%10 == 0:
                 print('\n\n@@@ variation:read block ' + str(i) + ' from cep-cfs cep')
 
-        # read vuv from block position 512 - then set the position to 0.0
+        # read vuv from block position 512
+        # then set the position to interpolation of cep[p+510] and cep[p+513]
+        # RECALL: cep[pointer + 511] holds ndelay
         vuv = cep[pointer + 512]
-        cep[pointer + 512] = np.float32(0.0)
+        cep510 = cep[pointer + 510]
+        cep513 = cep[pointer + 513]
+        cep[pointer + 512] = np.multiply(np.add(cep510, cep513), .5).astype(np.float32)
         if diagnostics:
             if i%10 == 0:
                 print('variation: type(cep[pointer]) = ' + str(type(cep[pointer])))

@@ -46,14 +46,14 @@ for i in range(length):
 print('\n\n*******************************')
 
 # vuv==0.0 => aperiodic noise
-vuv:np.float32 = np.float32(1.0)      # vuv==1.0 => periodic 
+vuv = np.float32(1.0)      # vuv==1.0 => periodic 
 print('\n\n@@@@ length = ' + str(length))
 print('@@@@ hlength = ' + str(hlength))
 print('@@@@ threshold = ' + str(threshold))
 print('@@@@ vuv = ' + str(vuv))   
 cep = np.zeros(length, dtype=np.float32)
 
-N:int = hlength - threshold
+N = hlength - threshold
 K = math.floor(hlength - N*vuv)
 
 print('N = hlength - threshold = ' + str(N))

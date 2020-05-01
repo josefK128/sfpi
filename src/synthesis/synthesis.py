@@ -121,9 +121,14 @@ def action(ceppath_:str, sfpath_:str, sr:int=44100) ->None:
     i = 0
 
     while i < cepblocksize_:
-        # read ndelay from block position 511 - then set the position to 0.0
+        # read ndelay from block position 511 
+        # then set the position to interpolation of cep[p+510] and cep[p+513]
+        # RECALL: cep[pointer + 512] also holds interpolation of cep510 cep513
+        # as a replacement for vuv 
         ndelay = round(cepa_[pointer + 511])
-        cepa_[pointer + 511] = np.float32(0.0)
+        cepa_510 = cepa_[pointer + 510]
+        cepa_513 = cepa_[pointer + 513]
+        cepa_[pointer + 511] = np.multiply(np.add(cepa_510, cepa_513), .5).astype(np.float32)
 
         # read synthesized sound-blk block 
         block:np.ndarray = inverse_complex_cepstrum(cepa_[pointer: pointer + 1024], ndelay)

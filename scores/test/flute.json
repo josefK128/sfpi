@@ -1,0 +1,14 @@
+{ "_analysis": true,
+  "_variation": true,
+  "_synthesis": true,
+
+  "sfbranch": "sf/test/flute.wav",
+  "cepbranch": "cep/test/flute.cep",
+  "cepbranch_": "cep_/test/flute_.cep",
+  "sfbranch_": "sf_/test/flute_.wav",
+
+  "composition":{"cross_synthesis": false,
+                 "driverceppath": "../cep_/test/test_.cep", 
+                 "threshold": 128 }
+}
+ 
